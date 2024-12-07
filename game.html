@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Moving Box</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+            font-family: Arial, sans-serif;
+        }
+        .box {
+            position: absolute;
+            width: 100px;
+            height: 50px;
+            background-color: black;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .result {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: green;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">click<br>here</div>
+    <div class="result"></div>
+
+    <script>
+        const box = document.querySelector('.box');
+        const result = document.querySelector('.result');
+        let moveCount = 0;
+        const maxMoves = 30;
+        let startTime = Date.now();
+
+        function moveBox() {
+            if (moveCount >= maxMoves) return;
+
+            const maxX = window.innerWidth - box.offsetWidth;
+            const maxY = window.innerHeight - box.offsetHeight;
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            box.style.left = `${randomX}px`;
+            box.style.top = `${randomY}px`;
+
+            moveCount++;
+            if (moveCount === maxMoves) {
+                box.removeEventListener('mouseenter', moveBox);
+                const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(2);
+                result.textContent = `Finished in ${elapsedTime} seconds!`;
+                result.style.display = 'block';
+            }
+        }
+
+        box.addEventListener('mouseenter', moveBox);
+
+        box.addEventListener('click', () => {
+            box.removeEventListener('mouseenter', moveBox);
+            const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(2);
+            result.textContent = `Caught in ${elapsedTime} seconds!`;
+            result.style.display = 'block';
+            box.style.display = 'none';
+        });
+
+        // 初期位置を設定
+        moveBox();
+    </script>
+</body>
+</html>
